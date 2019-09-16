@@ -1,0 +1,118 @@
+{ "ignore_hl_actions": ["init", "done", "stop" , "alert", "human_confirm" , "handshake", "inspect_part1"],
+  "non_removable_bodies" : [],
+  "config_map": {
+
+
+    "move": {
+      "precondition": [
+        "isCurrentPose(pose_current)",
+        "isTargetPose(target_pose)",
+        "isTrajectory(pose_current, pose_end:target_pose, mp)",
+        "UpdateBattery(Trajectory:mp)"
+      ],
+      "semantics": {
+        "_comment": "If an argument is not mentioned, it implies that it is available either from hl_args or previous ll_args",
+        "isCurrentPose": {
+          "pose_current": {
+            "generator": "UAVCurrentPoseGenerator"
+          }
+        },
+        "UpdateBattery": {
+
+        },
+        "isTargetPose" : {
+          "target_pose" : {
+            "generator" : "TargetPoseGenerator",
+            "type" : "move_target"
+          }
+        },
+        "isTrajectory": {
+          "mp": {
+            "generator": "TrajectoryGenerator",
+            "type": "move_trajectory"
+          }
+        }
+      },
+      "effect": [],
+      "updates_ll_state":"True"
+
+    },
+
+    "recharge": {
+      "precondition": [
+       "UpdateBattery(Trajectory:mp)"
+      ],
+      "semantics": {
+        "_comment": "If an argument is not mentioned, it implies that it is available either from hl_args or previous ll_args",
+        "UpdateBattery": {
+
+        }
+      },
+      "effect": []
+    },
+
+    "inspect_part2": {
+      "precondition" : [
+        "isCurrentPose(pose_current)",
+        "isTargetPose(target_pose)",
+        "isTrajectory(pose_current,pose_end:target_pose,mp)",
+        "UpdateBattery(Trajectory:mp)"
+      ],
+      "semantics" : {
+        "isCurrentPose" : {
+          "pose_current": {
+            "generator": "UAVCurrentPoseGenerator"
+          }
+        },
+        "UpdateBattery": {
+
+        },
+        "isTargetPose" : {
+          "target_pose" : {
+            "generator" : "TargetPoseGenerator",
+            "type" : "inspect_target"
+          }
+        },
+        "isTrajectory" : {
+          "mp" : {
+            "generator" : "TrajectoryGenerator",
+            "type" : "inspect_trajectory"
+          }
+        }
+      },
+      "effect" : []
+    },
+
+    "joint_inspect": {
+      "precondition" : [
+        "isCurrentPose(pose_current)",
+        "isTargetPose(target_pose)",
+        "isTrajectory(pose_current,pose_end:target_pose,mp)",
+        "UpdateBattery(Trajectory:mp)"
+      ],
+      "semantics" : {
+        "isCurrentPose" : {
+          "pose_current": {
+            "generator": "UAVCurrentPoseGenerator"
+          }
+        },
+        "UpdateBattery": {
+
+        },
+        "isTargetPose" : {
+          "target_pose" : {
+            "generator" : "TargetPoseGenerator",
+            "type" : "inspect_trajectory"
+          }
+        },
+        "isTrajectory" : {
+          "mp" : {
+            "generator" : "TrajectoryGenerator",
+            "type" : "joint_inspect_trajectory"
+          }
+        }
+      },
+      "effect" : []
+    }
+  }
+}

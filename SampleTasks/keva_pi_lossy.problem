@@ -1,0 +1,26 @@
+(define (problem keva-problem)
+(:domain keva)
+(:objects
+    plank1 plank2 plank3 - plank
+    yumi - robot
+)
+
+
+
+(:init
+
+(clear location1)
+(clear location2)
+(handempty)
+
+)
+
+(:goal (and (onTable plank1)
+			(orientation plank1 vertical)
+			(onTable plank2)
+			(orientation plank2 vertical)
+			(onDoublePlank plank3 plank1 plank2)
+			(orientation plank3 horizontal)
+			(not (clearPlank plank1))
+			(not (clearPlank plank2)))
+))

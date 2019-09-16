@@ -1,0 +1,170 @@
+{
+  "ignore_hl_actions": [
+    "initialize",
+    "done",
+    "stop"
+  ],
+  "non_removable_bodies": [
+    "fetch",
+    "table6"
+  ],
+  "config_map": {
+    "movetograsppose" : {
+      "precondition" : [
+      "isCurrentPose(pose_current)",
+        "isBasePoseAroundObject(base_target)",
+        "isMotionPlan(pose_current, pose_end:base_target, mp0)",
+        "isGripperOpenState(g_open)",
+        "isCurrentPose(pose_current)",
+        "isGraspPose(grasp_pose)",
+        "isMotionPlan(pose_current, pose_end:grasp_pose, mp1)",
+        "NotObstructs(trajectory:mp1)"
+        ],
+      "semantics" : {
+        "isCurrentPose": {
+          "pose_current": {
+            "generator": "CurrentPoseGenerator"
+          }
+        },
+        "isGripperOpenState": {
+          "g_open": {
+            "generator": "GripperOpenStateGenerator",
+            "type":"gripper_state"
+          }
+        },
+        "isBasePoseAroundObject": {
+          "base_target": {
+            "generator": "BasePoseAroundTableGenerator"
+          }
+        },
+        "isGraspPose": {
+          "grasp_pose": {
+            "generator": "GraspPoseGenerator"
+          }
+        },
+        "isMotionPlan": {
+          "mp0": {
+            "generator": "MotionPlanGenerator",
+            "type":"robot_base_trajectory"
+          },
+          "mp1": {
+            "generator": "MotionPlanGenerator",
+            "type":"manipulator_trajectory"
+          }
+        },
+        "NotObstructs": {
+        }
+      },
+      "effect": []
+    },
+    "grasp" : {
+      "precondition" : [
+        "isGripperCloseState(g_close)",
+        "isCurrentPose(pose_current)",
+        "isInitPose(pose_init)",
+        "isMotionPlan(pose_current,pose_end:pose_init,mp0)"
+      ],
+      "semantics" : {
+         "isInitPose": {
+          "pose_init": {
+            "generator": "InitPoseGenerator"
+          }
+        },
+        "isGripperCloseState": {
+          "g_close": {
+            "generator": "GripperCloseStateGenerator",
+            "type":"gripper_state"
+
+          }
+        },
+         "isMotionPlan": {
+          "mp0": {
+            "generator": "MotionPlanGenerator",
+            "type":"manipulator_trajectory"
+          }
+        },
+        "isCurrentPose": {
+          "pose_current": {
+            "generator": "CurrentPoseGenerator"
+          }
+        }
+      },
+      "effect": []
+    },
+    "movetopdpose" : {
+      "precondition" : [
+        "isCurrentPose(pose_current)",
+        "isBasePoseAroundObject(base_target)",
+        "isMotionPlan(pose_current,pose_end:base_target,mp0)",
+        "isCurrentPose(pose_current)",
+        "isPutDownPose(put_down_pose)",
+        "isMotionPlan(pose_current,pose_end:put_down_pose,mp1)",
+        "NotPutdownObstructs(trajectory:mp1)"
+      ],
+      "semantics" : {
+        "isPutDownPose":{
+          "put_down_pose" : {
+              "generator" : "PutDownPoseGenerator"
+          }
+        },
+        "isBasePoseAroundObject": {
+          "base_target": {
+            "generator": "BasePoseAroundTableGenerator"
+          }
+        },
+        "isMotionPlan" :{
+          "mp0": {
+            "generator": "MotionPlanGenerator",
+            "type":"robot_base_trajectory"
+          },
+          "mp1" : {
+            "generator" : "MotionPlanGenerator",
+            "type" : "manipulator_trajectory"
+          }
+        },
+        "isCurrentPose": {
+          "pose_current": {
+            "generator": "CurrentPoseGenerator"
+          }
+        },
+        "NotPutdownObstructs": {
+        }
+      },
+      "effect": []
+    },
+    "put" : {
+      "precondition" : [
+      "IsGripperOpenState(g_open)",
+        "isCurrentPose(pose_current)",
+        "isInitPose(pose_init)",
+        "isMotionPlan(pose_current,pose_end:pose_init,mp0)"
+      ],
+      "semantics" : {
+        "IsGripperOpenState" : {
+          "g_open" : {
+            "generator" : "GripperOpenStateGenerator",
+            "type":"gripper_state"
+          }
+        },
+        "isCurrentPose": {
+          "pose_current": {
+            "generator": "CurrentPoseGenerator"
+          }
+        },
+        "isInitPose": {
+          "pose_init": {
+            "generator": "InitPoseGenerator"
+          }
+        },
+        "isMotionPlan" :{
+          "mp0" : {
+            "generator" : "MotionPlanGenerator",
+            "type" : "manipulator_trajectory"
+          }
+        }
+      },
+      "effect": []
+    }
+  }
+
+}
