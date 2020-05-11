@@ -1,10 +1,11 @@
+#!/usr/bin/env python
 import argparse
-from DataStructures.PlanRefinementNode import PlanRefinementNode
-from DataStructures.PlanRefinementGraph import PlanRefinementGraph
-from PRGraphRefinementAlgorithms.PRRefinement import PRRefinement
-from Wrappers.ProblemSpecification import ProblemSpecification
+from src.DataStructures.PlanRefinementNode import PlanRefinementNode
+from src.DataStructures.PlanRefinementGraph import PlanRefinementGraph
+from src.PRGraphRefinementAlgorithms.PRRefinement import PRRefinement
+from src.Wrappers.ProblemSpecification import ProblemSpecification
+import src.util as util
 import Config
-import States
 import random
 import numpy as np
 import time
@@ -14,20 +15,22 @@ class TMP(object):
     def __init__(self, args=None):
         random.seed(int(time.time()))
         np.random.seed(int(time.time()))
-        problem_spec = ProblemSpecification(pddl_domain_file=Config.DEFAULT_PDDL_FILE,
+        self.problem_spec = ProblemSpecification(pddl_domain_file=Config.DEFAULT_PDDL_FILE,
                                             pddl_problem_file=Config.DEFAULT_PROBLEM_FILE,
                                             ll_state_type=Config.LL_STATE_TYPE,
                                             hl_state_type=Config.HL_STATE_TYPE,
                                             hl_planner_name=Config.HL_PLANNER,
-                                            ll_planner_name=Config.OPENRAVE_PLANNER)
+                                            ll_planner_name=Config.LL_PLANNER)
 
-        initial_pr_node = PlanRefinementNode(problem_specification=problem_spec)
+        self.initial_pr_node = PlanRefinementNode(problem_specification=self.problem_spec)
 
-        plan_refinement_graph = PlanRefinementGraph(initial_pr_node)
+        self.plan_refinement_graph = PlanRefinementGraph(self.initial_pr_node)
 
-        PRRefinement(plan_refinement_graph,problem_spec).run()
-
-
+        self.PRRef = PRRefinement(self.plan_refinement_graph,self.problem_spec)
+    
+    def execute(self):
+        success = self.PRRef.run()
+        return success
 
 if __name__ == "__main__":
 
@@ -38,14 +41,12 @@ if __name__ == "__main__":
     # parser.add_argument('--plannerName', type=str, help='High Level Planner', default='ff')
     # parser.add_argument('--outputFile', type=str, help='Plan Output File', default=Config.DEFAULT_OUTPUT_FILE)
     # args = parser.parse_args()
-    Config.setPaths()
-    import time
     start_time = time.time()
     print(start_time)
-    Config.blockprint()
+    util.blockprint()
     tmp = TMP()
-    Config.enablePrint()
-    Config.resetPaths()
+    tmp.execute()
+    util.enablePrint()
     print("--- %s seconds ---" % (time.time() - start_time))
     # raw_input("Exit?")
     # exit()

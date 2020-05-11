@@ -1,13 +1,20 @@
 import sys,os
-
+################################# System paths ##################################
 PROJ_DIR = os.path.abspath(os.path.dirname(__file__))+'/'
 HOME_DIR = os.path.expanduser("~") + '/'
+TEST_DIR = PROJ_DIR + "test_domains/"
+MISC_DIR = PROJ_DIR + "misc/"
+PLANNER_DIR = PROJ_DIR + "planners/"
 
-MAX_TIME = 1200
-
-K = 3
-DEBUG = False
-REAL_ROBOT = False
+################################# Domain Selection ##################################
+# DOMAIN = 'DelicateCan'
+# DOMAIN = 'FetchCanPhysicalWorld'
+# DOMAIN = 'Hanoi'
+# DOMAIN = 'Manufacture'
+# DOMAIN = 'KevaLooped'
+# DOMAIN = 'TorsenLSD'
+# Domain = 'Hangar'
+DOMAIN = "Factory"
 
 ### FOR Canworld
 
@@ -19,15 +26,12 @@ REAL_ROBOT = False
 # ROBOT_NAME = 'fetch'
 # DOMAIN_NAME = "can_world"
 # LL_ACTION_CONFIG = PROJ_DIR + 'ActionConfig_canworldV3.json'
-# ROBOT_BASE_JOINTS = ["dummy_x","dummy_y","dummy_rot"]
-# FETCH_URDF = PROJ_DIR + 'RobotModels/fetch/URDF/fetch.urdf'
-# FETCH_SRDF = PROJ_DIR + 'RobotModels/fetch/URDF/fetch.srdf'
 # OPENRAVE_ENV_XML = PROJ_DIR+'GeneratedEnvironments/can_world_'+NUM_CANS+'_cans.dae'
 
 
 ### FOR Canworld MDP
 
-# NUM_CANS = "20"
+# NUM_CANS = "25"
 # DEFAULT_PDDL_FILE = PROJ_DIR+'SampleTasks/new_canworld_mdp_'+NUM_CANS+'_cans_5_domain.pddl'
 # DEFAULT_PROBLEM_FILE = PROJ_DIR+'SampleTasks/new_canworld_'+NUM_CANS+'_cans_mdp_problem.pddl'
 # DEFAULT_OUTPUT_FILE = PROJ_DIR+'SampleTasks/new_canworld_'+NUM_CANS+'_cans_problem.output'
@@ -35,57 +39,6 @@ REAL_ROBOT = False
 # ROBOT_NAME = 'fetch'
 # DOMAIN_NAME = "can_world"
 # LL_ACTION_CONFIG = PROJ_DIR + 'ActionConfig_canworldV3.json'
-# ROBOT_BASE_JOINTS = ["dummy_x","dummy_y","dummy_rot"]
-# FETCH_URDF = PROJ_DIR + 'RobotModels/fetch/URDF/fetch.urdf'
-# FETCH_SRDF = PROJ_DIR + 'RobotModels/fetch/URDF/fetch.srdf'
-
-### FOR Delicate Canworld MDP
-#
-NUM_CANS = "20"
-DEFAULT_PDDL_FILE = PROJ_DIR+'SampleTasks/can_world_delicate_cans_'+NUM_CANS+'_cans_10_mdp.pddl'
-DEFAULT_PROBLEM_FILE = PROJ_DIR+'SampleTasks/can_world_delicate_cans_'+NUM_CANS+'_cans_problem.pddl'
-DEFAULT_OUTPUT_FILE = PROJ_DIR+'SampleTasks/'+NUM_CANS+'_can_world_delicate_cans.output'
-OPENRAVE_ENV_XML = PROJ_DIR+'GeneratedEnvironments/can_world_'+NUM_CANS+'_cans.dae'
-# OPENRAVE_ENV_XML = PROJ_DIR + "GeneratedEnvironments/real_can_world_10_cans.dae"
-ROBOT_NAME = 'fetch'
-DOMAIN_NAME = "delicate_canworld"
-LL_ACTION_CONFIG = PROJ_DIR + 'ActionConfig_delicate_cans_V3.json'
-ROBOT_BASE_JOINTS = ["dummy_x","dummy_y","dummy_rot"]
-FETCH_URDF = PROJ_DIR + 'RobotModels/fetch/URDF/fetch.urdf'
-FETCH_SRDF = PROJ_DIR + 'RobotModels/fetch/URDF/fetch.srdf'
-POLICY_OUTPUT_FILE = PROJ_DIR + "graph1.gv"
-COMBINED_FILE = PROJ_DIR + "combined_file0.pddl"
-
-### FOR Delicate Canworld MDP Physical Execution
-#
-# NUM_CANS = "15"
-# DEFAULT_PDDL_FILE = PROJ_DIR+'SampleTasks/can_world_delicate_cans_'+NUM_CANS+'_cans_10_mdp.pddl'
-# DEFAULT_PROBLEM_FILE = PROJ_DIR+'SampleTasks/can_world_delicate_cans_'+NUM_CANS+'_cans_problem.pddl'
-# DEFAULT_OUTPUT_FILE = PROJ_DIR+'SampleTasks/'+NUM_CANS+'_can_world_delicate_cans.output'
-# OPENRAVE_ENV_XML = PROJ_DIR + "GeneratedEnvironments/real_can_world_10_cans.dae"
-# ROBOT_NAME = 'fetch'
-# DOMAIN_NAME = "delicate_canworld"
-# LL_ACTION_CONFIG = PROJ_DIR + 'ActionConfig_real_delicate_cans_V3.json'
-# ROBOT_BASE_JOINTS = ["dummy_x","dummy_y","dummy_rot"]
-# FETCH_URDF = PROJ_DIR + 'RobotModels/fetch/URDF/fetch.urdf'
-# FETCH_SRDF = PROJ_DIR + 'RobotModels/fetch/URDF/fetch.srdf'
-# POLICY_OUTPUT_FILE = PROJ_DIR + "graph1.gv"
-# COMBINED_FILE = PROJ_DIR + "combined_file0.pddl"
-# REAL_ROBOT = True
-
-### FOR Hanoi world
-
-# NUM_BOXES = '5'
-# DEFAULT_PDDL_FILE = PROJ_DIR+'SampleTasks/hanoi_world_domain.pddl'
-# DEFAULT_PROBLEM_FILE = PROJ_DIR+'SampleTasks/hanoi_world_'+NUM_BOXES+'_boxes_problem.pddl'
-# DEFAULT_OUTPUT_FILE = PROJ_DIR+'SampleTasks/robotics_fetch_hanoi_'+NUM_BOXES+'_boxes_problem.output'
-# OPENRAVE_ENV_XML = PROJ_DIR+'GeneratedEnvironments/hanoi_world_'+NUM_BOXES+'_boxes.dae'
-# ROBOT_NAME = 'fetch'
-# DOMAIN_NAME = "hanoi_world"
-# LL_ACTION_CONFIG = PROJ_DIR + 'ActionConfig_hanoiV3.json'
-# ROBOT_BASE_JOINTS = ["dummy_x","dummy_y","dummy_rot"]
-# FETCH_URDF = PROJ_DIR + 'RobotModels/fetch/URDF/fetch.urdf'
-# FETCH_SRDF = PROJ_DIR + 'RobotModels/fetch/URDF/fetch.srdf'
 
 
 ### FOR Canworld2
@@ -99,121 +52,97 @@ COMBINED_FILE = PROJ_DIR + "combined_file0.pddl"
 # ROBOT_NAME = 'fetch'
 # DOMAIN_NAME = "can_world2"
 # LL_ACTION_CONFIG = PROJ_DIR + 'ActionConfigV2_canworld2.json'
-# ROBOT_BASE_JOINTS = ["dummy_x","dummy_y","dummy_rot"]
-# FETCH_URDF = PROJ_DIR + 'RobotModels/fetch/URDF/fetch.urdf'
-# FETCH_SRDF = PROJ_DIR + 'RobotModels/fetch/URDF/fetch.srdf'
 
+# This is not actually a domain but a placeholder name used for testing. should not be uncommented.
+# DOMAIN = 'Testing'
 
-#
-#
+################################# General Arguments ##################################
 
+DEBUG = False
+SHOW_VIEWER = True  # False if do not want to open the viewer.
+RUN_TRAJ = False # To enable final reuslts simulations
+STORE_REFINED = True  # true if final refined policy needs to be pickled.
+PLOT = False # To plot the refinement profile.
 
+# PRGraph refinement strategies options: "cost_batch_dfs" / "dfs"
+PR_STRATEGY = "cost_batch_dfs"
+ANYTIME = False
+NACTIONS = 2
 
-### FOR Hangar World
+VIEWER = 'qtcoin'  # name of the viewer.
 
-# DEFAULT_PDDL_FILE = PROJ_DIR+'SampleTasks/hanger_5_domain.pddl'
-# DEFAULT_PROBLEM_FILE = PROJ_DIR+'SampleTasks/hanger_problem.pddl'
-# DEFAULT_OUTPUT_FILE = PROJ_DIR+'SampleTasks/hanger_problem.output'
-#
-# ROBOT_NAME = "UAV"
-# DOMAIN_NAME = "hanger"
-# LL_ACTION_CONFIG = PROJ_DIR+'ActionConfig_HangerV3.json'
-# UAV_XML = PROJ_DIR + "GeneratedEnvironments/Hanger/test_dummy.robot.xml"
-# OPENRAVE_ENV_XML = PROJ_DIR+'GeneratedEnvironments/Hanger/hanger_world.dae'
-# ROBOT_BASE_JOINTS = ["dummy_x","dummy_y","dummy_z"]
-# POLICY_OUTPUT_FILE = PROJ_DIR + "graph1.gv"
-# COMBINED_FILE = PROJ_DIR + "combined_file0.pddl"
+MAX_TIME = 1000000000
+K = 4
+HORIZON = 5
+# Probability for stochastic choice between updating the model or backtracking.
+BACKTRACK_PROB = 1.0
 
-
-
-### General Arguments
-
-SHOW_VIEWER = True
-NO_MOTION_PLAN_CHECK = False
-REUSE_OPENRAVE_ENV = True
-
-LOG_LEVEL = 'DEBUG'
-
-
-
-
-FastForwardExe = PROJ_DIR+"TaskPlanners/FF-v2.3modified/ff"
-PDDL_STATE = 'pddl_state'
-
-
-
-IK_SOLVER = "ik_fast"
-# IK_SOLVER = "trac_ik"
-
-EXECUTE_MOTION_PLANS = False
-MAX_IKs_TO_CHECK_FOR_MP = 20
-
-OPENRAVE_PLANNER = 'openrave_planner'
-OPENRAVE_NATIVE_MOTION_PLANNER = 'OpenRave_NativeMotion_Planner'
-# MOTION_PLANNER = OPENRAVE_NATIVE_MOTION_PLANNER
-MOTION_PLANNER = "OMPL_RRTConnect"
+# Planners
 FF_PLANNER = 'ff'
 LAO_SOLVER = "lao"
 
+# Selection of high-level planner ( FF_PLANNER for PDDL/ LAO_SOLVER for PPDDL)
+HL_PLANNER = FF_PLANNER
+# HL_PLANNER = LAO_SOLVER
+
+# Options : "WARNING"/"DEBUG"
+LOG_LEVEL = 'DEBUG'
+
 OPENRAVE_LL_ENV = "OpenRaveLowLevelState"
 
+PDDL_STATE = 'pddl_state'
 HL_STATE_TYPE = "PDDLState"
+# LL_STATE_TYPE = OPENRAVE_LL_ENV
+LL_STATE_TYPE = "PDDLLowLevelState"
 
-LL_STATE_TYPE = OPENRAVE_LL_ENV
+COLLISION_CHECKER = 'pqp'
 
-#HL_PLANNER = FF_PLANNER
-HL_PLANNER = LAO_SOLVER
+# IK solvers.
+IK_SOLVER = "ik_fast"
+# IK_SOLVER = "trac_ik"
 
-HORIZON = 8
+# maximum number of iks to check for motion planning
+MAX_IKs_TO_CHECK_FOR_MP = 20
 
-RUN_TRAJ = True
+# Selection of which motion planner to use for motion planning
+# if generating motion plan through OpenRaveSimulator.
+OPENRAVE_NATIVE_MOTION_PLANNER = 'OpenRave_NativeMotion_Planner'
 
+# MOTION_PLANNER = OPENRAVE_NATIVE_MOTION_PLANNER
+MOTION_PLANNER = "OMPL_RRTConnect"
 
-LL_PLANNER = OPENRAVE_PLANNER
+LL_PLANNER = MOTION_PLANNER
+################################# Domain Specific Configs ##################################
 
+# These can override all General Arguments
+sys.path.append(TEST_DIR+DOMAIN+'/')
+# Config file specific to Domain. Importing here to override general args.
 
-LL_ENV = OPENRAVE_LL_ENV
+from DomainConfig import *
+# Policy path, needed if using PPDDL
+POLICY_OUTPUT_FILE = DOMAIN_DIR + "Tasks/graph1.gv"
+# Temp file path, needed if using PPDDL
+COMBINED_FILE = DOMAIN_DIR + "Tasks/combined_file0.pddl"
+# name of the file to store final results. used if PLOT is true.
+if PLOT:
+    RESULTS_FILE = "results_"+DOMAIN+".csv"
 
-LL_PLANNER_ARGS = {"world":"aair_lab", "robot":"fetch", "simulator":"openrave","doMapRobotJoints":False}
+################################# Robot Specific Configs ##################################
 
-OPENRAVE_CREATED_ENV_SAVE_FILE = '/tmp/hanoiworld_env.dae'
+YUMI_URDF = MISC_DIR + 'RobotModels/yumi_urdf/yumi_description/urdf/yumi.urdf'
+YUMI_SRDF = MISC_DIR + 'RobotModels/yumi_urdf/yumi_description/urdf/yumi.srdf'
 
-PLOT = False
-PORTNO = 1234
-RESULTS_FILE = "results_20_10.csv"
+FETCH_URDF = MISC_DIR + 'RobotModels/fetch/URDF/fetch.urdf'
+FETCH_SRDF = MISC_DIR + 'RobotModels/fetch/URDF/fetch.srdf'
+# ROBOT_NAME is retried from DomainConfig import
 
-VIEWER = 'qtcoin'
-
-BACKTRACK_PROB = 0.0
-
-
-
-
-
-
-
-
-PR_STRATEGY = "cost_batch_dfs"
-
-def blockprint():
-    pass
-    return
-    # sys.stdout = open(os.devnull,"w")
-
-def enablePrint():
-    pass
-    return
-    # sys.stdout = sys.__stdout__
-
-def setPaths():
-    # Adds correct path in URDF files
-    sedstr = "sed -i \"s|project_directory|"+PROJ_DIR[:-1]+"|g\" "+PROJ_DIR
-    os.system(sedstr +"GeneratedEnvironments/Hanger/UAV.urdf")
-    os.system(sedstr +"RobotModels/fetch/URDF/fetch.urdf")
-    os.system(sedstr +"RobotModels/yumi_urdf/yumi_description/urdf/yumi.urdf")
- 
-def resetPaths():
-    sedstr = "sed -i \"s|"+PROJ_DIR[:-1]+"|project_directory|g\" "+PROJ_DIR
-    os.system(sedstr +"GeneratedEnvironments/Hanger/UAV.urdf")
-    os.system(sedstr +"RobotModels/fetch/URDF/fetch.urdf")
-    os.system(sedstr +"RobotModels/yumi_urdf/yumi_description/urdf/yumi.urdf")
+if ROBOT_NAME == 'fetch':
+    ROBOT_URDF = FETCH_URDF
+    ROBOT_SRDF = FETCH_SRDF
+    ROBOT_MANIP_DOF = 8
+elif ROBOT_NAME == 'yumi':
+    ROBOT_URDF = YUMI_URDF
+    ROBOT_SRDF = YUMI_SRDF
+    ROBOT_MANIP_DOF = 7
+elif ROBOT_NAME == 'UAV':
+    ROBOT_BASE_JOINTS = ["dummy_x","dummy_y","dummy_z"]
