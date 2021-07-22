@@ -1,0 +1,21 @@
+Digraph G {
+size = "500,500";
+0 [ label = " [ ] :: (spawn_can can1 fetch) :: 1" ]; 
+1 [ label = " [ 4:(init) 6:(hand_empty fetch) 12:(closed top_drawer) 14:(in can1 top_drawer) 22:(closed bottom_drawer) 30:(object_spawned can1) ] :: (open top_drawer fetch) :: 0.6" ]; 
+0->1 ;
+2 [ label = " [ 4:(init) 6:(hand_empty fetch) 12:(closed top_drawer) 22:(closed bottom_drawer) 24:(in can1 bottom_drawer) 30:(object_spawned can1) ] :: (open bottom_drawer fetch) :: 0.4" ]; 
+0->2 ;
+3 [ label = " [ 4:(init) 6:(hand_empty fetch) 8:(opened top_drawer) 14:(in can1 top_drawer) 16:(visible can1) 22:(closed bottom_drawer) 30:(object_spawned can1) ] :: (pick can1 fetch top_drawer) :: 0.6" ]; 
+1->3 ;
+4 [ label = " [ 4:(init) 6:(hand_empty fetch) 12:(closed top_drawer) 16:(visible can1) 18:(opened bottom_drawer) 24:(in can1 bottom_drawer) 30:(object_spawned can1) ] :: (pick can1 fetch bottom_drawer) :: 0.4" ]; 
+2->4 ;
+5 [ label = " [ 0:(holding can1) 4:(init) 8:(opened top_drawer) 16:(visible can1) 22:(closed bottom_drawer) 30:(object_spawned can1) ] :: (done) :: 0.6" ]; 
+3->5 ;
+6 [ label = " [ 0:(holding can1) 4:(init) 12:(closed top_drawer) 16:(visible can1) 18:(opened bottom_drawer) 30:(object_spawned can1) ] :: (done) :: 0.4" ]; 
+4->6 ;
+7 [ label = " [ 0:(holding can1) 2:(terminated) 4:(init) 8:(opened top_drawer) 16:(visible can1) 22:(closed bottom_drawer) 30:(object_spawned can1) ] :: STOP :: 0.6"  ];
+5->7 [shape=box,style=filled,color=".7 .3 1.0"];
+8 [ label = " [ 0:(holding can1) 2:(terminated) 4:(init) 12:(closed top_drawer) 16:(visible can1) 18:(opened bottom_drawer) 30:(object_spawned can1) ] :: STOP :: 0.4"  ];
+6->8 [shape=box,style=filled,color=".7 .3 1.0"];
+}
+# Cost: 3

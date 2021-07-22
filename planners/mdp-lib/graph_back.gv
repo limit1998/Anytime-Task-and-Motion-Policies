@@ -1,0 +1,30 @@
+Digraph G {
+size = "500,500";
+0 [ label = " [ 4:(current s0) 36:(at a1 recharge_station) 50:(at a2 recharge_station) 52:(available a1) 54:(available a2) 70:(hasbattery a1 defaulttraj) 90:(hasbattery a2 defualttraj) ] :: (move a1 defaulttraj recharge_station left_wing s0 s1) :: 1 " ]; 
+1 [ label = " [ 0:(at a1 left_wing) 10:(current s1) 50:(at a2 recharge_station) 52:(available a1) 54:(available a2) 70:(hasbattery a1 defaulttraj) 90:(hasbattery a2 defualttraj) ] :: (done) :: 0.95 " ]; 
+0->1 ;
+2 [ label = " [ 10:(current s1) 30:(at a1 about_left_wing) 50:(at a2 recharge_station) 52:(available a1) 54:(available a2) 70:(hasbattery a1 defaulttraj) 90:(hasbattery a2 defualttraj) ] :: (move a1 defaulttraj about_left_wing left_wing s1 s2) :: 0.05 " ]; 
+0->2 ;
+3 [ label = " [ 0:(at a1 left_wing) 2:(terminated) 10:(current s1) 50:(at a2 recharge_station) 52:(available a1) 54:(available a2) 70:(hasbattery a1 defaulttraj) 90:(hasbattery a2 defualttraj) ] :: STOP :: 0.95 "  ];
+1->3 [shape=box,style=filled,color=".7 .3 1.0"];
+4 [ label = " [ 0:(at a1 left_wing) 14:(current s2) 50:(at a2 recharge_station) 52:(available a1) 54:(available a2) 70:(hasbattery a1 defaulttraj) 90:(hasbattery a2 defualttraj) ] :: (done) :: 0.0475 " ]; 
+2->4 ;
+5 [ label = " [ 14:(current s2) 30:(at a1 about_left_wing) 50:(at a2 recharge_station) 52:(available a1) 54:(available a2) 70:(hasbattery a1 defaulttraj) 90:(hasbattery a2 defualttraj) ] :: (move a1 defaulttraj about_left_wing left_wing s2 s3) :: 0.0025 " ]; 
+2->5 ;
+6 [ label = " [ 0:(at a1 left_wing) 2:(terminated) 14:(current s2) 50:(at a2 recharge_station) 52:(available a1) 54:(available a2) 70:(hasbattery a1 defaulttraj) 90:(hasbattery a2 defualttraj) ] :: STOP :: 0.0475 "  ];
+4->6 [shape=box,style=filled,color=".7 .3 1.0"];
+7 [ label = " [ 0:(at a1 left_wing) 16:(current s3) 50:(at a2 recharge_station) 52:(available a1) 54:(available a2) 70:(hasbattery a1 defaulttraj) 90:(hasbattery a2 defualttraj) ] :: (done) :: 0.002375 " ]; 
+5->7 ;
+8 [ label = " [ 16:(current s3) 30:(at a1 about_left_wing) 50:(at a2 recharge_station) 52:(available a1) 54:(available a2) 70:(hasbattery a1 defaulttraj) 90:(hasbattery a2 defualttraj) ] :: (move a1 defaulttraj about_left_wing left_wing s3 s4) :: 0.000125 " ]; 
+5->8 ;
+9 [ label = " [ 0:(at a1 left_wing) 2:(terminated) 16:(current s3) 50:(at a2 recharge_station) 52:(available a1) 54:(available a2) 70:(hasbattery a1 defaulttraj) 90:(hasbattery a2 defualttraj) ] :: STOP :: 0.002375 "  ];
+7->9 [shape=box,style=filled,color=".7 .3 1.0"];
+10 [ label = " [ 0:(at a1 left_wing) 18:(current s4) 50:(at a2 recharge_station) 52:(available a1) 54:(available a2) 70:(hasbattery a1 defaulttraj) 90:(hasbattery a2 defualttraj) ] :: (done) :: 0.00011875 " ]; 
+8->10 ;
+11 [ label = " [ 18:(current s4) 30:(at a1 about_left_wing) 50:(at a2 recharge_station) 52:(available a1) 54:(available a2) 70:(hasbattery a1 defaulttraj) 90:(hasbattery a2 defualttraj) ] :: (done) :: 6.25e-06 " ]; 
+8->11 ;
+12 [ label = " [ 0:(at a1 left_wing) 2:(terminated) 18:(current s4) 50:(at a2 recharge_station) 52:(available a1) 54:(available a2) 70:(hasbattery a1 defaulttraj) 90:(hasbattery a2 defualttraj) ] :: STOP :: 0.00011875 "  ];
+10->12 [shape=box,style=filled,color=".7 .3 1.0"];
+13 [ label = " [ 2:(terminated) 18:(current s4) 30:(at a1 about_left_wing) 50:(at a2 recharge_station) 52:(available a1) 54:(available a2) 70:(hasbattery a1 defaulttraj) 90:(hasbattery a2 defualttraj) ] :: STOP :: 6.25e-06 "  ];
+11->13 ;
+}

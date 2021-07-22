@@ -4,21 +4,21 @@
 		<contributor>
 			<authoring_tool>OpenRAVE Collada Writer v0.3.5</authoring_tool>
 		</contributor>
-		<created>2020-02-17T13:23:00-0700</created>
+		<created>2020-02-29T19:52:24-0700</created>
 		<keywords/>
-		<modified>2020-02-17T13:23:00-0700</modified>
+		<modified>2020-02-29T19:52:24-0700</modified>
 		<unit/>
 		<up_axis>Z_UP</up_axis>
 	</asset>
 	<library_visual_scenes id="vscenes">
-		<visual_scene id="vscene" name="keva_double_station_1">
+		<visual_scene id="vscene" name="keva_double_run_1">
 			<node id="visual0" name="table6" sid="visual0">
-				<translate>-0.3879999960308838 2.00725555415341e-09 -0.1009999984655762</translate>
+				<translate>-0.4001472890377045 -3.314994955871953e-06 -0.175972506403923</translate>
 				<rotate>1 0 0 0</rotate>
 				<instance_node url="#v0.node0" sid="node0" name="base"/>
 			</node>
 			<node id="visual1" name="table60" sid="visual1">
-				<translate>0.5142291784286499 0.1008815099718049 -0.03350429092347622</translate>
+				<translate>0.5142291784286499 -0.09911849002819512 -0.03350429092347622</translate>
 				<rotate>1 0 0 0</rotate>
 				<instance_node url="#v1.node0" sid="node0" name="base"/>
 			</node>
@@ -143,72 +143,72 @@
 				<instance_node url="#v25.node0" sid="node0" name="base"/>
 			</node>
 			<node id="visual26" name="left_station_base" sid="visual26">
-				<translate>0.4436903516406251 0.3413415839479065 0.07044531508346559</translate>
+				<translate>0.4436903516406251 -0.2586584160520936 0.07044531508346559</translate>
 				<rotate>1 0 0 0</rotate>
 				<instance_node url="#v26.node0" sid="node0" name="base"/>
 			</node>
 			<node id="visual27" name="left_station_v_left" sid="visual27">
-				<translate>0.4436903516406251 0.4043165839479063 0.07819531508346547</translate>
+				<translate>0.4436903516406251 -0.1956834160520937 0.07819531508346547</translate>
 				<rotate>1 0 0 90.00000000000001</rotate>
 				<instance_node url="#v27.node0" sid="node0" name="base"/>
 			</node>
 			<node id="visual28" name="left_station_v_right" sid="visual28">
-				<translate>0.4436903516406251 0.2783665839479064 0.0781953150834655</translate>
+				<translate>0.4436903516406251 -0.3216334160520936 0.0781953150834655</translate>
 				<rotate>1 0 0 90.00000000000001</rotate>
 				<instance_node url="#v28.node0" sid="node0" name="base"/>
 			</node>
 			<node id="visual29" name="left_station_l1_right" sid="visual29">
-				<translate>0.4436903516406251 0.2948615839479065 0.07820531508346559</translate>
+				<translate>0.4436903516406251 -0.3051384160520936 0.07820531508346559</translate>
 				<rotate>1 0 0 0</rotate>
 				<instance_node url="#v29.node0" sid="node0" name="base"/>
 			</node>
 			<node id="visual30" name="left_station_l1_left" sid="visual30">
-				<translate>0.4436903516406251 0.3878215839479065 0.07820531508346559</translate>
+				<translate>0.4436903516406251 -0.2121784160520936 0.07820531508346559</translate>
 				<rotate>1 0 0 0</rotate>
 				<instance_node url="#v30.node0" sid="node0" name="base"/>
 			</node>
 			<node id="visual31" name="left_station_l2_right" sid="visual31">
-				<translate>0.4514503516406251 0.2948615839479065 0.0859653150834656</translate>
+				<translate>0.4514503516406251 -0.3051384160520936 0.0859653150834656</translate>
 				<rotate>1 0 0 0</rotate>
 				<instance_node url="#v31.node0" sid="node0" name="base"/>
 			</node>
 			<node id="visual32" name="left_station_l2_left" sid="visual32">
-				<translate>0.4514503516406251 0.3878215839479065 0.0859653150834656</translate>
+				<translate>0.4514503516406251 -0.2121784160520936 0.0859653150834656</translate>
 				<rotate>1 0 0 0</rotate>
 				<instance_node url="#v32.node0" sid="node0" name="base"/>
 			</node>
 			<node id="visual33" name="right_station_base" sid="visual33">
-				<translate>0.4436903238296509 0.1913415789604187 0.07044531193971634</translate>
+				<translate>0.4436903238296509 -0.4086584210395813 0.07044531193971634</translate>
 				<rotate>1 0 0 0</rotate>
 				<instance_node url="#v33.node0" sid="node0" name="base"/>
 			</node>
 			<node id="visual34" name="right_station_v_left" sid="visual34">
-				<translate>0.4436903238296509 0.2543165789604186 0.07819531193971627</translate>
+				<translate>0.4436903238296509 -0.3456834210395815 0.07819531193971627</translate>
 				<rotate>1 0 0 90.00000000000001</rotate>
 				<instance_node url="#v34.node0" sid="node0" name="base"/>
 			</node>
 			<node id="visual35" name="right_station_v_right" sid="visual35">
-				<translate>0.4436903238296509 0.1283665789604187 0.07819531193971629</translate>
+				<translate>0.4436903238296509 -0.4716334210395813 0.07819531193971629</translate>
 				<rotate>1 0 0 90.00000000000001</rotate>
 				<instance_node url="#v35.node0" sid="node0" name="base"/>
 			</node>
 			<node id="visual36" name="right_station_l1_right" sid="visual36">
-				<translate>0.4436903238296509 0.1448615789604187 0.07820531193971635</translate>
+				<translate>0.4436903238296509 -0.4551384210395812 0.07820531193971635</translate>
 				<rotate>1 0 0 0</rotate>
 				<instance_node url="#v36.node0" sid="node0" name="base"/>
 			</node>
 			<node id="visual37" name="right_station_l1_left" sid="visual37">
-				<translate>0.4436903238296509 0.2378215789604187 0.07820531193971635</translate>
+				<translate>0.4436903238296509 -0.3621784210395813 0.07820531193971635</translate>
 				<rotate>1 0 0 0</rotate>
 				<instance_node url="#v37.node0" sid="node0" name="base"/>
 			</node>
 			<node id="visual38" name="right_station_l2_right" sid="visual38">
-				<translate>0.4514503238296509 0.1448615789604187 0.08596531193971635</translate>
+				<translate>0.4514503238296509 -0.4551384210395812 0.08596531193971635</translate>
 				<rotate>1 0 0 0</rotate>
 				<instance_node url="#v38.node0" sid="node0" name="base"/>
 			</node>
 			<node id="visual39" name="right_station_l2_left" sid="visual39">
-				<translate>0.4514503238296509 0.2378215789604187 0.08596531193971635</translate>
+				<translate>0.4514503238296509 -0.3621784210395813 0.08596531193971635</translate>
 				<rotate>1 0 0 0</rotate>
 				<instance_node url="#v39.node0" sid="node0" name="base"/>
 			</node>
@@ -5187,7 +5187,7 @@
 		</articulated_system>
 	</library_articulated_systems>
 	<library_kinematics_scenes id="kscenes">
-		<kinematics_scene id="kscene" name="keva_double_station_1">
+		<kinematics_scene id="kscene" name="keva_double_run_1">
 			<instance_articulated_system sid="body0_motion_inst" url="#body0_motion" name="table6">
 				<newparam sid="kscene_kmodel0_inst">
 					<SIDREF>body0_motion/body0_motion_kmodel0_inst</SIDREF>
@@ -5391,7 +5391,7 @@
 		</kinematics_scene>
 	</library_kinematics_scenes>
 	<library_physics_scenes id="pscenes">
-		<physics_scene id="pscene" name="keva_double_station_1">
+		<physics_scene id="pscene" name="keva_double_run_1">
 			<instance_physics_model url="#pmodel0" sid="pmodel0_inst" parent="#v0.node0">
 				<instance_rigid_body body="rigid0" sid="rigid0" target="#v0.node0"/>
 			</instance_physics_model>
@@ -6280,9 +6280,9 @@
 		</physics_model>
 	</library_physics_models>
 	<scene>
-		<instance_physics_scene url="#pscene" sid="pscene_inst" name="keva_double_station_1"/>
-		<instance_visual_scene url="#vscene" sid="vscene_inst" name="keva_double_station_1"/>
-		<instance_kinematics_scene url="#kscene" sid="kscene_inst" name="keva_double_station_1">
+		<instance_physics_scene url="#pscene" sid="pscene_inst" name="keva_double_run_1"/>
+		<instance_visual_scene url="#vscene" sid="vscene_inst" name="keva_double_run_1"/>
+		<instance_kinematics_scene url="#kscene" sid="kscene_inst" name="keva_double_run_1">
 			<bind_kinematics_model node="visual0/node0">
 				<param>kscene_kmodel0_inst</param>
 			</bind_kinematics_model>

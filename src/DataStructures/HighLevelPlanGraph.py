@@ -37,7 +37,7 @@ class HighLevelPlanGraph(Graph):
             try:
                 self.cost = hl_solution.cost
             except Exception,e:
-                self.cost = 0
+                self.cost = len(self.edges)
 
         else:
             self.cost = float("inf")
@@ -72,6 +72,25 @@ class HighLevelPlanGraph(Graph):
                 return False
         else:
             return False
+
+    def readjust_probabilities(self):
+        root = self.get_root()
+        q = [root]
+        p = 1
+        while len(q) > 0:
+            cur = q.pop(0)
+            children = cur.get_children()
+            for child in children:
+                parent_of_parent = cur.get_parent()
+                edge = self.get_edge(cur,child)
+                if parent_of_parent is None:
+                    edge.prob = edge.prob * p
+                else:
+                    parent_edge = self.get_edge(parent_of_parent,cur)
+                    edge.prob = edge.prob * parent_edge
+                q.append(child)
+
+
 
     def add_edge(self,parent,child,edge,label=None,new=True,only_nx=False):
         super(HighLevelPlanGraph,self).add_edge(parent,child,label)
@@ -143,6 +162,7 @@ class HighLevelPlanGraph(Graph):
                     # new_hlpg.edges[cur_new][child_copy] = e
                     new_hlpg.add_edge(cur_new, child_copy,e, new=True)
                     cur_new.add_child(child_copy)
+                    child_copy.set_parent(cur_new)
                     copy_list.append(child_copy)
                     old_list.append(child)
         return new_hlpg
@@ -260,6 +280,20 @@ class HighLevelPlanGraph(Graph):
 
     def merge(self,parent,new_tree,failed_node,label= ""):
         edge_copy = copy.deepcopy(self.get_edge(parent,failed_node))
+        parent_of_parent = parent.get_parent()
+        if parent_of_parent is not None:
+            parent_edge_prob = self.get_edge(parent_of_parent,parent).prob
+
+            new_tree_root = new_tree.get_root()
+            if parent_of_parent is not None:
+                q = [new_tree_root]
+                while len(q) > 0:
+                    cur = q.pop(0)
+                    children = cur.get_children()
+                    for child in children:
+                        edge = new_tree.get_edge(cur,child)
+                        edge.prob  *= parent_edge_prob
+                        q.append(child)
         parent.remove_child(failed_node)
         self.remove_edge(parent,failed_node)
         failed_node.set_parent(None)
@@ -273,6 +307,7 @@ class HighLevelPlanGraph(Graph):
         parent.add_child(failed_node)
         self.remove_edge(parent,new_tree.get_root())
         self.add_edge(parent,failed_node,edge_copy)
+        failed_node.set_parent(parent)
         copy_policy_tree.cost += new_tree.cost
         return copy_policy_tree
 

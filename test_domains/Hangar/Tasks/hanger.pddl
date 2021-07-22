@@ -1,5 +1,5 @@
-;move action works but with a hack for about_locations
-(define (domain hanger)
+;move action works but with a hack for agit bout_locations
+(define (domain test)
   (:requirements :typing :strips :equality :probabilistic-effects :rewards)
   (:types
     agent
@@ -28,7 +28,7 @@
     (hasSensor ?a - agent ?s - sensor)
     (informed ?l - location)
     (pair_status ?loc1 ?loc2 - location ?i - issue)
-    (hand_shaken ?UAV ?a2 - agent)
+    (hand_shaken ?a1 ?a2 - agent)
     (status ?l - location ?i - issue)
     (is_adjacent ?loc1 - location)
     (joint_inspected)
@@ -94,6 +94,8 @@
     )
 
     :effect (and
+        (not (current ?s1))
+        (current ?s2)
         (inspecting ?a ?loc)
         (not (available ?a))
 
@@ -118,9 +120,11 @@
 
         (available ?a)
         (not (inspecting ?a ?loc))
+        (not (current ?s1))
+        (current ?s2)
         (when (status ?loc fault_exists) ( probabilistic 0.95 ( fault_detected ?loc)))
         (when (status ?loc joint_fault_exists) ( probabilistic 0.05 ( fault_detected ?loc)))
-        (probabilistic 0.05 (and (when (= ?loc left_wing) (and (not (at ?a ?loc))(at ?a about_left_wing)))
+        (probabilistic 0.1 (and (when (= ?loc left_wing) (and (not (at ?a ?loc))(at ?a about_left_wing)))
                                 (when (= ?loc right_wing)(and (not (at ?a ?loc))(at ?a about_right_wing)))))
 
 
@@ -168,37 +172,37 @@
 
   (:action handshake
 
-   :parameters ( ?UAV ?a2 - agent )
+   :parameters ( ?a1 ?a2 - agent )
    :precondition (and
 	(init)
-        (not (= ?UAV ?a2))
-        (available ?UAV)
+        (not (= ?a1 ?a2))
+        (available ?a1)
         (available ?a2)
-        (not (hand_shaken ?UAV ?a2))
-        (not (hand_shaken ?a2 ?UAV))
+        (not (hand_shaken ?a1 ?a2))
+        (not (hand_shaken ?a2 ?a1))
 
    )
 
     :effect 
-        (probabilistic 0.7 (and (hand_shaken ?UAV ?a2) (hand_shaken ?a2 ?UAV)))
+        (probabilistic 0.7 (and (hand_shaken ?a1 ?a2) (hand_shaken ?a2 ?a1)))
 
   )
 
   (:action joint_inspect
-    :parameters ( ?UAV ?a2 - agent ?sense1 ?sense2 - sensor ?tr1 ?tr2 - trajectory ?loc1 ?loc2 - location  )
+    :parameters ( ?a1 ?a2 - agent ?sense1 ?sense2 - sensor ?tr1 ?tr2 - trajectory ?loc1 ?loc2 - location  )
     :precondition (and
        	(init)
-        (available ?UAV)
-        (hasSensor ?UAV ?sense1)
-        (at ?UAV ?loc1)
-        (valid ?UAV ?tr1 ?loc1 ?loc1)
+        (available ?a1)
+        (hasSensor ?a1 ?sense1)
+        (at ?a1 ?loc1)
+        (valid ?a1 ?tr1 ?loc1 ?loc1)
         (available ?a2)
         (hasSensor ?a2 ?sense2)
         (at ?a2 ?loc2)
         (valid ?a2 ?tr2 ?loc2 ?loc2)
-        (hand_shaken ?UAV ?a2)
-        (hand_shaken ?a2 ?UAV)
-        (hasBattery ?UAV ?tr1)
+        (hand_shaken ?a1 ?a2)
+        (hand_shaken ?a2 ?a1)
+        (hasBattery ?a1 ?tr1)
         (hasBattery ?a2 ?tr2)
         (not (is_adjacent ?loc1))
         (not (is_adjacent ?loc2))
@@ -213,11 +217,11 @@
         ;if joint fault is located at two different location
         (when (or (pair_status ?loc1 ?loc2 joint_fault_exists)(pair_status ?loc2 ?loc1 joint_fault_exists))
             (probabilistic 0.9 (and (fault_detected ?loc1)(fault_detected ?loc2))))
-        (not (hand_shaken ?UAV ?a2))
-        (not (hand_shaken ?a2 ?UAV))
-        (probabilistic 0.1 (and (when (= ?loc1 left_wing) (and (not (at ?UAV ?loc1)) (at ?UAV about_left_wing)))
+        (not (hand_shaken ?a1 ?a2))
+        (not (hand_shaken ?a2 ?a1))
+        (probabilistic 0.1 (and (when (= ?loc1 left_wing) (and (not (at ?a1 ?loc1)) (at ?a1 about_left_wing)))
 
-                                (when (= ?loc1 right_wing)(and (not (at ?UAV ?loc1)) (at ?UAV about_right_wing)))))
+                                (when (= ?loc1 right_wing)(and (not (at ?a1 ?loc1)) (at ?a1 about_right_wing)))))
         (probabilistic 0.1 (and (when (= ?loc2 left_wing) (and (not (at ?a2 ?loc1)) (at ?a2 about_left_wing)))
                                 (when (= ?loc2 right_wing)(and (not (at ?a2 ?loc1)) (at ?a2 about_right_wing)))))
 
@@ -228,56 +232,66 @@
 
 
   (:action done
-  :precondition (and (fault_detected left_wing)(fault_detected right_wing))
+  :precondition (and (at a1 left_wing))
   :effect (terminated)
 
   )
 
     (:action init
         :precondition (not (init))
-        :effect (and
-            (init)
-            (hasBattery UAV defaultTraj)
-            (valid UAV defaultTraj left_wing left_wing)
-            (valid UAV defaultTraj right_wing right_wing)
-            (valid UAV defaultTraj recharge_station recharge_station)
-            (valid UAV defaultTraj recharge_station left_wing)
-            (valid UAV defaultTraj right_wing left_wing)
-            (valid UAV defaultTraj recharge_station right_wing)
-            (valid UAV defaultTraj left_wing right_wing)
-            (valid UAV defaultTraj left_wing recharge_station)
-            (valid UAV defaultTraj right_wing recharge_station)
-            (valid UAV defaultTraj about_left_wing left_wing)
-            (valid UAV defaultTraj about_right_wing right_wing)
+        :effect (
+            
+            (hasBattery a1 defaultTraj)
+            ;(hasBattery a2 defualtTraj)
+            (valid a1 defaultTraj left_wing left_wing)
+            (valid a1 defaultTraj right_wing right_wing)
+            (valid a1 defaultTraj recharge_station recharge_station)
+            (valid a1 defaultTraj recharge_station left_wing)
+            (valid a1 defaultTraj right_wing left_wing)
+            (valid a1 defaultTraj recharge_station right_wing)
+            (valid a1 defaultTraj left_wing right_wing)
+            (valid a1 defaultTraj left_wing recharge_station)
+            (valid a1 defaultTraj right_wing recharge_station)
+            (valid a1 defaultTraj about_left_wing left_wing)
+            (valid a1 defaultTraj about_right_wing right_wing)
+            ;(valid a2 defaultTraj left_wing left_wing)
+            ;(valid a2 defaultTraj right_wing right_wing)
+            ;(valid a2 defaultTraj recharge_station recharge_station)
+            ;(valid a2 defaultTraj recharge_station left_wing)
+            ;(valid a2 defaultTraj right_wing left_wing)
+            ;(valid a2 defaultTraj recharge_station right_wing)
+            ;(valid a2 defaultTraj left_wing right_wing)
+            ;(valid a2 defaultTraj left_wing recharge_station)
+            ;(valid a2 defaultTraj right_wing recharge_station)
+            ;(valid a2 defaultTraj about_left_wing left_wing)
+            ;(valid a2 defaultTraj about_right_wing right_wing)
             (is_adjacent about_left_wing)
             (is_adjacent about_right_wing)
-            (hasSensor UAV camera)
+            (hasSensor a1 camera)
+            ;(hasSensor a2 camera)
 
         )
-    )
 )
 
-
 (define (problem p01)
-(:domain hanger)
+(:domain :test)
 (:objects 
 	camera - sensor
-	UAV - agent
+	a1 a2 - agent
 	s0 s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 - step
 	defaultTraj - trajectory
 )	
 
 (:init
 
-    (available UAV)
-    (at UAV recharge_station)
-
+    (available a1)
+    (available a2)
+    (at a1 recharge_station)
+    (at a2 recharge_station)
     
-    (status left_wing fault_exists)
-    (status right_wing fault_exists)
+    (status left_wing fault_exsists)
 )
 
-(:goal (and (fault_detected left_wing)(fault_detected right_wing)(terminated)))
-;(:goal (and (at a1 left_wing)(terminated)))
+(:goal (and (at a1 left_wing)(terminated)))
 (:goal-reward 100) (:metric maximize (reward))
 )

@@ -1,0 +1,106 @@
+{
+  "_comments" : [
+    "HL_ARGS should be in the same order as declared in PDDL",
+    "If no generator is provided for LL_ARGS it will check for the value in HL_ARGS with the same name",
+    "The sequence is important"
+  ],
+  "ignore_hl_actions": [
+    "run_machine", "done"
+  ],
+  "non_removable_bodies": [
+    "fetch", "machine_1", "machine_2", "machine_3", "machine_4", "machine_5", 
+    "machine_6", "machine_7", "machine_8", "machine_9", "machine_10", 
+    "machine_11", "machine_12", "machine_13", "machine_14", "machine_15", "machine_16", 
+    "room1_floor", "room2_floor", "room1_walls", "room2_walls", "tool_shelf",
+    "machine_1_base", "machine_2_base", "machine_3_base", "machine_4_base", "machine_5_base", 
+    "machine_6_base", "machine_7_base", "machine_8_base", "machine_9_base", "machine_10_base", 
+    "machine_11_base", "machine_12_base", "machine_13_base", "machine_14_base", "machine_15_base", "machine_16_base","workstation_1", "workstation_2", "workstation_3", "workstation_4", "workstation_5", "workstation_6" ,"workstation_7", "workstation_8", "workstation_9", "workstation_10", "workstation_11", "workstation_12" ,"workstation_13", "workstation_14", "workstation_15", "workstation_16"
+  ],
+  "robots" : {
+    "fetch" : "FetchRobot"
+  },
+  "config_map": {
+    "pick" : {
+      "HL_ARGS" : ["robot", "loc", "obj", "grippr"],
+      "LL_ARGS" : {
+        "robot" : [],
+        "obj" :  [],
+        "loc" :  [],
+        "grippr" : [],
+        "cpose" : ["CurrentManipPoseGenerator","ManipPose"],
+        "gpose" : ["GraspPoseGeneratorManuf_FIK","ManipPose"],
+        "pgpose": ["PreGraspPoseGeneratorManuf_FIK","ManipPose"],
+        "pgp_traj" : ["MotionPlanGenerator", "ManipTrajectory"],
+        "gp_traj" : ["MotionPlanGenerator", "ManipTrajectory"],
+        "gripper_close_traj" : ["GripperCloseStateGenerator","GripperCloseTrajectory"],
+        "endpose" :  ["InitPoseGenerator","ManipPose"],
+        "fp_traj" :  ["MotionPlanGenerator","ManipTrajectory"]
+      },
+      "precondition" : [
+        "RobotPose(robot,cpose)",
+        "IsValidGraspPose(obj,gpose,robot)",
+        "IsValidPreGraspPose(grasp_pose:gpose,pgpose,robot)",
+        "IsValidPGPMotionPlan(robot,pose_current:cpose,pose_end:pgpose,pgp_traj)",
+        "NotObstructs(t:pgp_traj)",
+        "IsValidGPMotionPlan(robot,pose_current:pgpose,pose_end:gpose,gp_traj)",
+        "NotObstructs(t:gp_traj)",
+        "IsValidGripperCloseTraj(robot,gripper_close_traj)",
+        "IsValidEndPose(robot,endpose,robot)",
+        "IsValidFPMotionPlan(robot,pose_current:gpose,pose_end:endpose,fp_traj)",
+        "NotObstructs(t:fp_traj)"
+      ],
+      "effect" : [],
+      "execution_sequence" : ["pgp_traj","gp_traj","gripper_close_traj","fp_traj"],
+      "attach" : "obj"
+    },
+
+    "place": {
+      "HL_ARGS" : ["obj","robot","loc","machine","grippr"],
+      "LL_ARGS" : {
+        "obj": [],
+        "robot": [],
+        "loc" : [],
+        "machine": [],
+        "grippr" : [],
+        "cpose": ["CurrentManipPoseGenerator","ManipPose"],
+        "pdpose": ["PutDownPoseGeneratorManuf","ManipPose"],
+        "pdp_traj": ["MotionPlanGenerator","ManipTrajectory"],
+        "gripper_open_trajectory": ["GripperOpenStateGenerator","GripperOpenTrajectory"],
+        "endpose": ["InitPoseGenerator","ManipPose"],
+        "fp_traj": ["MotionPlanGenerator","ManipTrajectory"]
+      },
+      "precondition" : [
+        "RobotPose(robot,cpose)",
+        "IsValidPDPose(obj,pdpose,robot)",
+        "IsValidPDPMotionPlan(robot,pose_current:cpose,pose_end:pdpose,pdp_traj)",
+        "NotObstructs(t:pdp_traj)",
+        "IsValidGripperOpenTraj(robot,gripper_open_trajectory)",
+        "IsValidEndPose(obj,endpose,robot)",
+        "IsValidFPMotionPlan(robot,pose_current:pdpose,pose_end:endpose,fp_traj)",
+        "NotObstructs(t:fp_traj)"
+      ],
+      "effect" : [],
+      "execution_sequence" : ["pdp_traj","gripper_open_trajectory","fp_traj"]
+    },
+
+    "move": {
+      "HL_ARGS" : ["robot", "oldloc", "loc"],
+      "LL_ARGS" : {
+        "robot" : [],
+        "oldloc": [],
+        "loc": [],
+        "cbpose": ["CurrentBasePoseGenerator", "BasePose"],
+        "tbpose": ["BasePoseAtTargetGenerator", "BasePose"],
+        "base_traj": ["BaseMotionPlanGenerator","BaseTrajectory"]
+      },
+      "precondition" : [
+        "RobotBasePose(robot,cbpose)",
+        "IsValidBasePose(robot,tbpose)",
+        "IsValidBaseMotionPlan(robot,pose_current:cbpose,pose_end:tbpose,base_traj)"
+      ],
+      "effect" : [],
+      "execution_sequence" : ["base_traj"]
+    }
+
+  }
+}

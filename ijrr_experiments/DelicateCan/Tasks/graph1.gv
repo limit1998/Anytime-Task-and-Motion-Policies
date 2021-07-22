@@ -1,0 +1,29 @@
+Digraph G {
+size = "500,500";
+0 [ label = " [ 4:(init) 6:(revived) 38:(obstructs traj object12 object1) 40:(obstructs traj object13 object1) 56:(empty gripper) 242:(delicate object3) 328:(delicate object7) 410:(delicate object11) 488:(delicate object17) ] :: (grasp object13 fetch gripper traj) :: 1" ]; 
+1 [ label = " [ 4:(init) 38:(obstructs traj object12 object1) 242:(delicate object3) 328:(delicate object7) 410:(delicate object11) 488:(delicate object17) 1046:(ingripper object13 gripper) 1050:(crushed object13) ] :: (first) :: 1" ]; 
+0->1 ;
+2 [ label = " [ 4:(init) 8:(first) 38:(obstructs traj object12 object1) 242:(delicate object3) 328:(delicate object7) 410:(delicate object11) 488:(delicate object17) 1046:(ingripper object13 gripper) 1050:(crushed object13) ] :: (second) :: 1" ]; 
+1->2 ;
+3 [ label = " [ 4:(init) 38:(obstructs traj object12 object1) 242:(delicate object3) 328:(delicate object7) 410:(delicate object11) 488:(delicate object17) 1046:(ingripper object13 gripper) 1050:(crushed object13) 1206:(second) ] :: (third) :: 1" ]; 
+2->3 ;
+4 [ label = " [ 4:(init) 6:(revived) 38:(obstructs traj object12 object1) 242:(delicate object3) 328:(delicate object7) 410:(delicate object11) 488:(delicate object17) 1046:(ingripper object13 gripper) 1050:(crushed object13) ] :: (put object13 fetch gripper traj) :: 1" ]; 
+3->4 ;
+5 [ label = " [ 4:(init) 6:(revived) 38:(obstructs traj object12 object1) 56:(empty gripper) 242:(delicate object3) 328:(delicate object7) 410:(delicate object11) 488:(delicate object17) 1050:(crushed object13) ] :: (grasp object12 fetch gripper traj) :: 1" ]; 
+4->5 ;
+6 [ label = " [ 4:(init) 242:(delicate object3) 328:(delicate object7) 410:(delicate object11) 488:(delicate object17) 1008:(ingripper object12 gripper) 1012:(crushed object12) 1050:(crushed object13) ] :: (first) :: 1" ]; 
+5->6 ;
+7 [ label = " [ 4:(init) 8:(first) 242:(delicate object3) 328:(delicate object7) 410:(delicate object11) 488:(delicate object17) 1008:(ingripper object12 gripper) 1012:(crushed object12) 1050:(crushed object13) ] :: (second) :: 1" ]; 
+6->7 ;
+8 [ label = " [ 4:(init) 242:(delicate object3) 328:(delicate object7) 410:(delicate object11) 488:(delicate object17) 1008:(ingripper object12 gripper) 1012:(crushed object12) 1050:(crushed object13) 1206:(second) ] :: (third) :: 1" ]; 
+7->8 ;
+9 [ label = " [ 4:(init) 6:(revived) 242:(delicate object3) 328:(delicate object7) 410:(delicate object11) 488:(delicate object17) 1008:(ingripper object12 gripper) 1012:(crushed object12) 1050:(crushed object13) ] :: (put object12 fetch gripper traj) :: 1" ]; 
+8->9 ;
+10 [ label = " [ 4:(init) 6:(revived) 56:(empty gripper) 242:(delicate object3) 328:(delicate object7) 410:(delicate object11) 488:(delicate object17) 1012:(crushed object12) 1050:(crushed object13) ] :: (grasp object1 fetch gripper traj) :: 1" ]; 
+9->10 ;
+11 [ label = " [ 0:(ingripper object1 gripper) 4:(init) 60:(crushed object1) 242:(delicate object3) 328:(delicate object7) 410:(delicate object11) 488:(delicate object17) 1012:(crushed object12) 1050:(crushed object13) ] :: (done) :: 1" ]; 
+10->11 ;
+12 [ label = " [ 0:(ingripper object1 gripper) 2:(terminated) 4:(init) 60:(crushed object1) 242:(delicate object3) 328:(delicate object7) 410:(delicate object11) 488:(delicate object17) 1012:(crushed object12) 1050:(crushed object13) ] :: STOP :: 1"  ];
+11->12 [shape=box,style=filled,color=".7 .3 1.0"];
+}
+# Cost: 11

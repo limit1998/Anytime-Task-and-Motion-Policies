@@ -1,0 +1,21 @@
+(define (problem p01)
+    (:domain drawers)
+
+    (:objects
+        top_drawer bottom_drawer - drawer
+        can1 - can
+        fetch - robot
+    )
+
+    (:init
+        (dummy)
+    )
+
+    (:goal
+        (and
+            (holding can1)
+            (terminated)
+        )
+    )
+
+)

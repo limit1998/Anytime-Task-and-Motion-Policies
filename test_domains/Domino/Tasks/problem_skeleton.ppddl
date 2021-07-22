@@ -6,12 +6,13 @@
         gripper - gripper
     )
     (:init
-        (empty_gripper robot gripper)
+        (empty_gripper yumi gripper)
 
     )
 
     (:goal
         (and
+            (terminated)
             ###GOAL_HERE###
         )
     )

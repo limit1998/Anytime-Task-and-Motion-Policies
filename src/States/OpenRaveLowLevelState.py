@@ -29,8 +29,6 @@ class OpenRaveLowLevelState(State):
         self.history = []
         self.ll_history = []
         self.ll_variables = {}
-        if Config.ROBOT_NAME == "UAV":
-            self.ll_variables["battery"] = 500
 
 
     def set_values(self, vals):
@@ -93,6 +91,12 @@ class OpenRaveLowLevelState(State):
                     robots[name]['dof_values'] = robot.GetDOFValues()
                     if len(robot.GetGrabbed()) > 0:
                         robots[name]['grabbed_objects'] = [o.GetName() for o in robot.GetGrabbed()]
+                    if robot.GetActiveManipulator() is not None:
+                        robots[name]["active_arm"] = robot.GetActiveManipulator().GetName()
+                    if len(robot.GetActiveJointIndices()) != robot.GetActiveDOF():
+                        robots[name]["active_joint_indices"] = -1
+                    else:
+                        robots[name]["active_joint_indices"] = robot.GetActiveJointIndices()
 
                 else:
                     assert name not in objects, "ERROR, Openrave env_json has duplicate object names"
@@ -103,7 +107,7 @@ class OpenRaveLowLevelState(State):
         env_json = {}
         env_json['robots'] = robots
         env_json['objects'] = objects
-        # env_json['xml'] = Config.OPENRAVE_CREATED_ENV_SAVE_FILE
+        # env_json['xml'] = Config. OPENRAVE_CREATED_ENV_SAVE_FILE
 
         return env_json
 
@@ -113,6 +117,8 @@ class OpenRaveLowLevelState(State):
         val_cpy = self.values.copy()
         new_state = OpenRaveLowLevelState(universe=uni_cpy, functions=fun_cpy, values=val_cpy)
         new_state.ll_variables = copy.deepcopy(self.ll_variables)
+        new_state.ll_history = copy.deepcopy(self.ll_history)
+        new_state.history = copy.deepcopy(self.history)
         return new_state
         # return self.values.copy()
 

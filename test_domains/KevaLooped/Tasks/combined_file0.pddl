@@ -9,7 +9,7 @@
            (onDoublePlank ?p - plank ?p - plank ?p - plank)
            (clearPlank ?p - plank)
   		   (handempty)
-           (completed)
+             (completed)
   		   (inGripper ?p - plank)
   		   (orientation ?p - plank ?o - orientated)
            (placed ?p - plank)
@@ -193,8 +193,7 @@
 
   (:action human_place
     :parameters (?p - plank)
-    :precondition (and
-        (handempty)
+    :precondition (and (handempty)
         (free location1)
         (free location2)
     )
@@ -208,33 +207,34 @@
   )
 
   (:action back_to_init
-     :parameters (?rob - robot)
-     :precondition (and
-          (onTable plank1)
-          (orientation plank1 sideways)
-          (onTable plank2)
-          (orientation plank2 sideways)
-          )
+  :parameters (?rob - robot)
+  :precondition (and (onTable plank1)
+			(orientation plank1 vertical)
+			(onTable plank2)
+			(orientation plank2 vertical)
+			(onDoublePlank plank3 plank1 plank2)
+			(orientation plank3 horizontal)
+		)
 
-     :effect (and
-          (completed)
-          )
+  :effect (and
+     (completed)
+     )
   )
-
+  
   (:action done
-     :precondition ( and (completed))
-     :effect (and
-          (terminated)
-          )
-   )
+  :precondition ( and (completed))
 
+  :effect (and
+     (terminated)
+     )
+  )
 )
 (define (problem p01)
 
 	(:domain keva)
 	(:objects
 
-		plank1 plank2 - plank
+		plank1 plank2 plank3 - plank
  		horizontal vertical sideways - orientated
  		region_1 region_2 region_3 - region
 		location1 location2 - location

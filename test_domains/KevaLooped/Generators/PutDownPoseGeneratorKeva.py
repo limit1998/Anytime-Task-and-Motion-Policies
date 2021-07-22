@@ -27,7 +27,7 @@ class PutDownPoseGeneratorKeva(Generator):
         self.simulator = ll_state.simulator
         self.known_argument_values = known_argument_values
         self.generate_function_state = self.generate_function()
-        self.table_name = 'table60'
+        self.table_name = 'work_table_center'
         self.plank_name = known_argument_values.get('obj')
         if Config.LOOPED_RUNS:
             self.plank_name = Config.correct_plank_name(self.plank_name)
@@ -82,8 +82,9 @@ class PutDownPoseGeneratorKeva(Generator):
             putdown_x = []
             putdown_y = []
             for i in range(number_of_poses):
-                putdown_x.append(random.uniform(0.45, 0.55))
-                putdown_y.append(random.uniform(-0.1, 0.0))
+                putdown_x.append(random.uniform(0.5, 0.55))
+                putdown_y.append(random.uniform(-0.05, 0.05)) #For PI envs
+                # putdown_y.append(random.uniform(-0.12,-0.1)) #For triple tower envs
 
             ref_root_plank = reference_env.GetKinBody(self.plank_name)
             world_Tref_root_plank = ref_root_plank.GetTransform()
@@ -117,6 +118,9 @@ class PutDownPoseGeneratorKeva(Generator):
 
             # openrave requires gripper in world frame
             world_T_gripper = np.matmul(world_T_robot,robot_T_gripper)
+            z = reference_env.GetKinBody(self.plank_name).ComputeAABB().extents()[2]
+            # if z < 0.004:
+            #     world_T_gripper[2,3] += 0.01
             draw = orpy.misc.DrawAxes(env, world_T_gripper)
 
             ik_sols = self.simulator.robots[self.known_argument_values["robot"]].get_ik_solutions(world_T_gripper, check_collisions=True)

@@ -16,11 +16,11 @@ class LAOSolver(Planner):
     def __init__(self):
         self.succ_str = "Found legal sequence actions"
         self.success = True
-        if not os.path.isfile(Config.PLANNER_DIR+'mdp-lib'):
-            import tarfile
-            my_tar = tarfile.open(Config.PLANNER_DIR+'mdp-lib.tar.gz')
-            my_tar.extractall(Config.PLANNER_DIR)
-            my_tar.close()
+        # if not os.path.isfile(Config.PLANNER_DIR+'mdp-lib'):
+        #     import tarfile
+        #     my_tar = tarfile.open(Config.PLANNER_DIR+'mdp-lib.tar.gz')
+        #     my_tar.extractall(Config.PLANNER_DIR)
+        #     my_tar.close()
 
     def solve(self,hlproblem,problem_specification):
         self.__runPlanner(domain_file=hlproblem.domain_file,problem_file=hlproblem.problem_file)
@@ -52,7 +52,7 @@ class LAOSolver(Planner):
             p1 = subprocess.Popen([Config.PLANNER_DIR+"mdp-lib/testppddl.out",dom_prob_file_path,"p01",str(Config.HORIZON),Config.POLICY_OUTPUT_FILE])
             start_time = time.time()
             while p1.poll() is None:
-                if time.time() - start_time > 200:
+                if time.time() - start_time > 60:
                     killed = True
                     self.success = False
                     p1.kill()

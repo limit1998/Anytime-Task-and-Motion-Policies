@@ -1,6 +1,6 @@
 
 def write_goal(goal_domino,domain,problem):
-    s = "(picked d"+str(goal_domino)+" )"
+    s = "(picked domino"+str(goal_domino)+")"
     domain = domain.replace("###GOAL_HERE###",s)
     problem = problem.replace("###GOAL_HERE###",s)
     return domain,problem
@@ -8,19 +8,20 @@ def write_goal(goal_domino,domain,problem):
 def write_objects(n,problem):
     s = ""
     for i in range(n):
-        s += "d"+str(i)+" "
+        s += "domino"+str(i)+" "
     s += "- domino"
     problem = problem.replace("###DOMINOS_HERE###",s)
     return problem
 
 def write_prob_effects(n,k,goal_domino,domain):
-    s = "(:probabilistic " + "\n"
-    for i in range(goal_domino - k, goal_domino+k+1):
-        if i == goal_domino:
-            continue
-        p = int((100.0 / float(abs(goal_domino - i) + 1)) * 100) / 100.0
-        s += str(p) + " (dropped d"+str(i)+")" + "\n"
-    s += ")"
+    s = ""
+    for i in range(k):
+        for j in range(2):
+            domino_number = (2 * (i+1) + j)
+            p = (int((100.0 / float(i+2)) * 100) / 100.0) / 100.0
+            s += "(probabilistic " + "\n"
+            s += str(p) + " (dropped domino"+str(domino_number)+")" + "\n"
+            s += ")\n"
     domain = domain.replace("###PROBABILISTIC_EFFECTS_HERE###",s)
     return domain
 
@@ -28,7 +29,7 @@ def write_prob_effects(n,k,goal_domino,domain):
 if __name__ == "__main__":
     n = 15
     k = 2
-    goal_domino = 4
+    goal_domino = 1
     domain = open("domain_skeleton.ppddl","r").read()
     problem = open("problem_skeleton.ppddl","r").read()
     domain,problem = write_goal(goal_domino,domain,problem)

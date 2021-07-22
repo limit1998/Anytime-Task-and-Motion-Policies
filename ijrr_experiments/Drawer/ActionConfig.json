@@ -1,0 +1,107 @@
+{
+  "_comments" : [
+    "HL_ARGS should be in the same order as declared in PDDL",
+    "If no generator is provided for LL_ARGS it will check for the value in HL_ARGS with the same name",
+    "The sequence is important"
+  ],
+  "ignore_hl_actions": [
+    "done",
+    "stop"
+  ],
+  "non_removable_bodies": [
+    "fetch",
+    "drawer_outer",
+    "floor"
+  ],
+  "robots" : {
+    "fetch" : "FetchRobot"
+  },
+  "config_map": {
+    "pick" : {
+      "HL_ARGS" : ["can","robot","drawer"],
+      "LL_ARGS" : {
+        "cpose" : ["CurrentManipPoseGenerator","ManipPose"],
+        "gpose" : ["GraspPoseGenerator","ManipPose"],
+        "gripper_close_traj" : ["GripperCloseStateGenerator","GripperCloseTrajectory"],
+        "endpose" :  ["InitPoseGenerator","ManipPose"],
+        "traj1" :  ["MotionPlanGeneratorPRPY","ManipTrajectory"],
+        "traj2" : ["MotionPlanGeneratorPRPY","ManipTrajectory"]
+      },
+      "precondition" : [
+        "RobotPose(robot,cpose)",
+        "IsValidGraspPose(can,gpose,robot)",
+        "IsValidMotionPlan(robot,pose_current:cpose,pose_end:gpose,traj1)",
+        "RobotPose(robot,cpose)",
+        "IsValidGripperCloseTraj(robot,gripper_close_traj)"
+      ],
+      "effect" : [],
+      "execution_sequence" : ["traj1","gripper_close_traj"],
+      "attach" : "can"
+    },
+
+    "open" : {
+      "HL_ARGS" : ["drawer", "robot"],
+      "LL_ARGS" : {
+        "cpose" : ["CurrentManipPoseGenerator", "ManipPose"],
+        "gppose" : ["DrawerHoldPoseGenerator", "ManipPose"],
+        "dopenpose" : ["DrawerOpenPoseGenerator", "ManipPose"],
+        "traj1" : ["MotionPlanGeneratorPRPY", "ManipTrajectory"],
+        "traj2" : ["DeltaMotionPlanGeneratorPRPY", "ManipTrajectory"],
+        "endpose" : ["InitPoseGenerator","ManipPose"],
+        "traj3" : ["MotionPlanGeneratorPRPY", "ManipTrajectory"],
+        "g_close" : ["GripperCloseStateGenerator","DrawerGripperCloseTrajectory"],
+        "g_open" : ["GripperOpenStateGenerator","GripperOpenTrajectory"]
+      },
+      "precondition" : [
+        "RobotPose(robot,cpose)",
+        "IsValidDrawerHoldPose(robot,drawer,gppose)",
+        "IsValidMotionPlan(robot,pose_current:cpose,pose_end:gppose,traj1)",
+        "IsValidGripperCloseTraj(robot,g_close)",
+        "IsValidDrawerOpenPose(robot,drawer,gppose,dopenpose)",
+        "IsValidMotionPlan(robot,pose_current:gppose,pose_end:dopenpose,traj2)",
+        "IsValidGripperOpenTraj(robot,g_open)"
+      ],
+      "effect" : [],
+      "execution_sequence" : ["traj1","g_close","traj2","g_open"]
+    },
+
+
+    "close" : {
+      "HL_ARGS" : ["drawer", "robot"],
+      "LL_ARGS" : {
+        "cpose" : ["CurrentManipPoseGenerator", "ManipPose"],
+        "gppose" : ["DrawerHoldPoseGenerator", "ManipPose"],
+        "dclosepose" : ["DrawerClosePoseGenerator", "ManipPose"],
+        "traj1" : ["MotionPlanGeneratorPRPY", "ManipTrajectory"],
+        "traj2" : ["DeltaMotionPlanGeneratorPRPY", "ManipTrajectory"],
+        "endpose" : ["InitPoseGenerator","ManipPose"],
+        "traj3" : ["MotionPlanGeneratorPRPY", "ManipTrajectory"],
+        "g_close" : ["GripperCloseStateGenerator","DrawerGripperCloseTrajectory"],
+        "g_open" : ["GripperOpenStateGenerator","GripperOpenTrajectory"]
+      },
+      "precondition" : [
+        "RobotPose(robot,cpose)",
+        "IsValidDrawerHoldPose(robot,drawer,gppose)",
+        "IsValidMotionPlan(robot,pose_current:cpose,pose_end:gppose,traj1)",
+        "IsValidGripperCloseTraj(robot,g_close)",
+        "IsValidDrawerClosePose(robot,drawer,gppose,dclosepose)",
+        "IsValidMotionPlan(robot,pose_current:gppose,pose_end:dclosepose,traj2)",
+        "IsValidGripperOpenTraj(robot,g_open)"
+      ],
+      "effect" : [],
+      "execution_sequence" : ["traj1","g_close","traj2","g_open"]
+    },
+
+    "spawn_can" : {
+      "HL_ARGS" : ["can","robot"],
+      "LL_ARGS" : {},
+      "precondition" : [],
+      "effect" : [
+        "Spawned(can)",
+        "RobotLoaded(robot)"
+      ]
+
+    }
+
+  }
+}

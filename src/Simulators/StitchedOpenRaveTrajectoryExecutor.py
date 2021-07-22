@@ -40,7 +40,7 @@ class OpenRaveTrajectoryExecutor:
 
     @staticmethod
     def select_child_using_props(policy_tree, node, choice, children):
-        stochastic_policy = getattr(importlib.import_module('test_domains.'+Config.DOMAIN + '.StochasticPolicy'),'StochasticPolicy')
+        stochastic_policy = getattr(importlib.import_module( Config.TEST_DIR_NAME + '.'+Config.DOMAIN + '.StochasticPolicy'),'StochasticPolicy')
         return stochastic_policy.select_child_using_props(policy_tree, node, choice, children)
 
 
@@ -69,7 +69,8 @@ class OpenRaveTrajectoryExecutor:
         # This function executes the trajectory on openrave and also creates ros trajectories
         ros_traj_list = []
         # choice_seq = [0,1,1,1,0,1,0,1,0,0,1,1,0,1,1,1,0,1,1,0,1,0,1,1]
-        choice_seq = [0,1,0,0,1,0,0,1,1]
+        choice_seq = [0,1,1,0,1,0,1,0,1,1,0,0,1,1,0,0,0,1,0,1,1,0,1,0]
+        # choice_seq = [0,1,0,1,0,1,0,0,1]
         choice_number = 0
         gripper_poses = []
         for i in range(num_runs):
@@ -99,7 +100,7 @@ class OpenRaveTrajectoryExecutor:
                         ll_plan = edge.ll_plan
                         exec_sequence = edge.exec_seq
                         for arg in exec_sequence:
-                            exec_obj = getattr(importlib.import_module('test_domains.'+Config.DOMAIN + '.Executor.' + ll_plan[arg]['type']), ll_plan[arg]['type'])(ll_plan[arg]['type'])
+                            exec_obj = getattr(importlib.import_module(Config.TEST_DIR_NAME + '.'+Config.DOMAIN + '.Executor.' + ll_plan[arg]['type']), ll_plan[arg]['type'])(ll_plan[arg]['type'])
                             exec_obj.execute(self.ll_state, ll_plan[arg]['value'], edge.generated_values)
                             # if str(arg) != 'g_open' and str(arg) != 'g_close':
                                 # exec_obj.execute(self.ll_state, ll_plan[arg]['value'], edge.generated_values)
@@ -111,7 +112,7 @@ class OpenRaveTrajectoryExecutor:
                             ros_traj_list.append([ll_plan[arg]['type'], phys_val])
                         for i in edge.effect:
                             if i[0] == 'pos':
-                                pred_obj = getattr(importlib.import_module('test_domains.'+Config.DOMAIN + '.Predicates.' + i[1]), i[1])(i[1])
+                                pred_obj = getattr(importlib.import_module(Config.TEST_DIR_NAME + '.'+Config.DOMAIN + '.Predicates.' + i[1]), i[1])(i[1])
                                 pred_obj.apply(self.ll_state, edge.generated_values)
                         self.ll_state.values = self.ll_state.get_values_from_env(self.sim.env)
                     q.append(selected_child)
@@ -157,6 +158,6 @@ if __name__ == '__main__':
     choice = input("Runtrajectory/Store trajectory (0/1):  ")
     run_traj = OpenRaveTrajectoryExecutor()
     if choice == 0:
-        run_traj.run_trajectory(3)
+        run_traj.run_trajectory(6)
     elif choice == 1:
-        run_traj.store_refined_ros_tree(3)
+        run_traj.store_refined_ros_tree(6)

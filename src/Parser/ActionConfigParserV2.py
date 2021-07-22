@@ -4,7 +4,7 @@ from src.Wrappers.Effect import Effect
 import json
 from src.Precondition.Precondition import Precondition
 from src.DataStructures.Predicate import Predicate
-from Config import DOMAIN
+from Config import DOMAIN, TEST_DIR_NAME
 import importlib
 
 
@@ -86,7 +86,8 @@ class ActionConfigParserV2(object):
                         generator_class = arg_details[0]
                         arg_type = arg_details[1]
                         if argument_name in exec_sequence:
-                            gen_class  =  importlib.import_module('test_domains.'+DOMAIN+'.Executor.'+arg_type)
+                            t = TEST_DIR_NAME + "." +DOMAIN+'.Executor.'+arg_type
+                            gen_class  =  importlib.import_module(t)
                             executor = getattr(gen_class, arg_type)(argument_name)
                             
                 arg_obj = ArgumentV2(argument_name,
@@ -101,7 +102,7 @@ class ActionConfigParserV2(object):
             # Check if the predicate has be custom defined:
             predicate_obj = None
             try:
-                gen_class  =  importlib.import_module('test_domains.'+DOMAIN+'.Predicates.'+predicate_name)
+                gen_class  =  importlib.import_module(TEST_DIR_NAME + "."+DOMAIN+'.Predicates.'+predicate_name)
                 predicate_obj = getattr(gen_class, predicate_name)(predicate_name, arg_object_list)
             except:
                 predicate_obj = Predicate(predicate_name, arg_object_list)

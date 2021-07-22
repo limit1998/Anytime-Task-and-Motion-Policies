@@ -1,5 +1,5 @@
 (define (domain domino)
-    (:requirements :adl :typinng :equality :probabilistic-effects :conditional-effects)
+    (:requirements :adl :typing :equality :probabilistic-effects :conditional-effects)
     (:types
         domino
         robot
@@ -19,7 +19,7 @@
     (:action pick
         :parameters (?d - domino ?r - robot ?g - gripper)
         :precondition (and
-            (ontable ?d - domino)
+            (ontable ?d)
             (empty_gripper ?r ?g)
             (init)
         )
@@ -27,12 +27,19 @@
             (not (ontable ?d))
             (not (empty_gripper ?r ?g))
             (picked ?d)
-            (:probabilistic 
-33.33 (dropped d2)
-50.0 (dropped d3)
-50.0 (dropped d5)
-33.33 (dropped d6)
+            (probabilistic 
+0.5 (dropped domino2)
 )
+(probabilistic 
+0.5 (dropped domino3)
+)
+(probabilistic 
+0.3333 (dropped domino4)
+)
+(probabilistic 
+0.3333 (dropped domino5)
+)
+
          )
     )
 
@@ -54,7 +61,7 @@
             (forall (?d1 - domino)
                 (or (not (dropped ?d1))(notified ?d1))
             )
-            (picked d4 )
+            (picked domino1)
         )
         :effect (and
             (terminated)

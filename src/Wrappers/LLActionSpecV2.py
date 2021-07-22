@@ -26,6 +26,7 @@ class LLActionSpecV2(object):
         self.last_stable_state =None
         self.init_values = None
         self.new_generated_values = None
+        self.start_time = None
 
     def __deepcopy__(self, memodict={}):
         temp = LLActionSpecV2(copy.deepcopy(self.name), copy.deepcopy(self.precondition), copy.deepcopy(self.effect),execution_sequence=copy.deepcopy(self.exec_sequence),hl_args=copy.deepcopy(self.hl_args))
@@ -187,7 +188,7 @@ class LLActionSpecV2(object):
                         while not self.predicates[i].has_generatable_arguments():
 
                             for a in range(self.predicates[i].get_argument_count()):
-                                if self.predicates[i].get_arguments()[j].name in self.exec_sequence:
+                                if self.predicates[i].get_arguments()[a].name in self.exec_sequence:
                                     low_level_state.rollback()
 
                             i = i - 1

@@ -6,18 +6,18 @@ import Config
 from Queue import PriorityQueue
 from src.DataStructures.HighLevelActionSequence import HighLevelAcionSequnce
 import networkx as nx
-from src.tmp_exceptions import *
+from src.tmp_exceptions import FailedPredicateException, TimeOutException, OutOfPossibleErrorsException
 import copy
-from openravepy import *
 from src.DataStructures.RefinedPolicy import RefinedPolicy
 from src.DataStructures.RefinedPolicyNode import RefinedPolicyNode
 from src.DataStructures.RefinedPolicyEdge import RefinedPolicyEdge
 import pickle
+import time
 
 
 class PlanRefinementNode(GraphNode):
     def __init__(self, problem_specification=None,hl_plan_graph=None, hl_plan_tree= None, parent=None, last_refined_hl_plan_graph_node=None, \
-                 lqueue = None,ll_state_values=None,mode = "err_free",visited = True,start_time = None):
+                 lqueue = None,ll_state_values=None,mode = "err_free",visited = True,start_time = None,restart = 0, action_execute = 0):
         super(PlanRefinementNode,self).__init__()
         self.__parent = parent
         self.__children = []
@@ -34,6 +34,10 @@ class PlanRefinementNode(GraphNode):
         self.start_time = start_time
         self.last_refined_hl_action_node = None
         self.child_queue = None
+        self.restart = restart
+        self.action_execute = action_execute
+        self.refined_mass = 0
+        self.start_time = None
 
 
 
@@ -41,6 +45,7 @@ class PlanRefinementNode(GraphNode):
         if self.lqueue is None or new:
             root = self.hl_plan_tree.get_root()
             self.lqueue = PriorityQueue()
+            total_prob = 0
             for node in self.hl_plan_tree.graph.nodes:
                 if self.hl_plan_tree.graph.out_degree[node] == 0:
                     path = nx.shortest_path(self.hl_plan_tree.graph,root,node)
@@ -49,13 +54,12 @@ class PlanRefinementNode(GraphNode):
                         continue
                     hlas = HighLevelAcionSequnce(path)
                     prob = last_edge.prob
-                    if prob == 0:
-                        for action in path:
-                            print action.hl_action
-                        exit(0)
-
+                    total_prob += prob
                     p = len(path) / float(prob)
-                    self.lqueue.put((p,hlas))
+                    if Config.PC:
+                        self.lqueue.put((p,hlas))
+                    else:
+                        self.lqueue.put((random.random(),hlas))
         if self.lqueue.qsize() > 1:
             pass
 
@@ -77,6 +81,11 @@ class PlanRefinementNode(GraphNode):
 
     def try_refine(self,hl_action_node=None, mode="err_free", resource_limit=10,force_start_from_begining=False,n_actions = 2):
         while True:
+            if self.start_time is not None:
+                self.start_time = time.time()
+            if time.time() - self.start_time > Config.MAX_TIME:
+                self.start_time = None
+                raise TimeOutException(hl_action_node=hl_action_node)
             if resource_limit == 0:
                 return False,"timeout",None
             reset_ll_sepc = False
@@ -87,12 +96,12 @@ class PlanRefinementNode(GraphNode):
             hl_action_node.hlpg_node_ref.ll_state.sync_simulator()
             child = hl_action_node.generate_child()
             stop = False
-            if Config.ANYTIME:
-                if n_actions < 1:
-                    stop = True
             if child is not None and not stop:
                 edge = self.hl_plan_tree.get_edge(hl_action_node.hlpg_node_ref,child.hlpg_node_ref)
             else:
+                if child is not None:
+                    child.set_ll_state(copy.deepcopy(edge.refined_ll_state))
+                    child.hlpg_node_ref.set_ll_state(copy.deepcopy(edge.refined_ll_state))
                 print "Finished for this sequence..."
                 return True,None,None
 
@@ -102,6 +111,7 @@ class PlanRefinementNode(GraphNode):
                 child.set_ll_state(ll_state)
                 child.hlpg_node_ref.set_ll_state(ll_state)
                 hl_action_node = child
+                # n_actions -= 1
                 continue
 
             if edge.ll_plan is None:
@@ -110,7 +120,6 @@ class PlanRefinementNode(GraphNode):
                 if hl_action_node.get_parent() is None:
                     resource_limit -= 1
                 hl_action = edge.hl_action
-                hl_action.hl_arguments['robot'] = Config.ROBOT_NAME
                 failed_predicates = None
                 ll_complete_action_spec =  edge.ll_action_spec
                 hl_state = hl_action_node.hl_state
@@ -137,7 +146,8 @@ class PlanRefinementNode(GraphNode):
                     child.set_ll_state(copy.deepcopy(next_ll_state))
                     child.hlpg_node_ref.set_ll_state(copy.deepcopy(next_ll_state))
                     hl_action_node = child
-                    n_actions -= 1
+                    self.start_time = time.time()
+                    # n_actions -= 1
                 except FailedPredicateException as failed_predicate_excep:
                     # ll_state = ll_state_cpy
                     ll_state.values = copy.deepcopy(ll_state_values)
@@ -182,17 +192,21 @@ class PlanRefinementNode(GraphNode):
                 if edge.ll_action_spec is not None:
                     # TODO Find a better way of storing effects
                     exec_seq = edge.ll_action_spec.exec_sequence
-                    effect = edge.ll_action_spec.effect
-                    if effect.getPositivePredicates() is not None:
-                        for e in effect.getPositivePredicates():
-                            all_effects.append(['pos',e.name])
-                    if effect.getNegativePredicates() is not None:
-                        for e in effect.getNegativePredicates():
-                            all_effects.append(['neg',e.name])
+                    # effect = edge.ll_action_spec.effect
+                    # if effect.getPositivePredicates() is not None:
+                    #     for e in effect.getPositivePredicates():
+                    #         all_effects.append(['pos',e.name])
+                    # if effect.getNegativePredicates() is not None:
+                    #     for e in effect.getNegativePredicates():
+                    #         all_effects.append(['neg',e.name])
+                    if edge.generated_values is not None:
+                        all_effects = edge.generated_values["next_hl_state"].getAllProps()
+                    else:
+                        all_effects = None
                 else:
                     exec_seq = None
                     effect = None
-                new_edge = RefinedPolicyEdge(edge.ll_plan, edge.generated_values, edge.has_mp, exec_seq,all_effects)
+                new_edge = RefinedPolicyEdge(edge.ll_plan, edge.generated_values, edge.has_mp, exec_seq,all_effects,edge.refined_ll_values)
                 refined_p_tree.add_node(new_child)
                 refined_p_tree.add_edge(new_node, new_child, new_edge)
                 queue.append(child)

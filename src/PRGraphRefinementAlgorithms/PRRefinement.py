@@ -59,7 +59,7 @@ class PRRefinement:
                 if self.issue == "timeout":
                     if self.current_pr_refinement_node.get_parent() is None:
                         return self.current_pr_refinement_node
-                return self.current_pr_refinement_node.get_parent()
+                return self.current_pr_refinement_node  #temp change
 
     def random(self):
         return None
@@ -150,8 +150,10 @@ class PRRefinement:
                                 resource_limit=30,n_actions = Config.NACTIONS)
                             revisit = False
                             if success:
+                                p = self.current_pr_refinement_node.hl_plan_tree.get_edge(temp.action_list[-2], temp.action_list[-1]).prob
+                                self.current_pr_refinement_node.refined_mass += p
                                 totalSuccess = True
-                                if Config.ANYTIME:
+                                if Config.ANYTIME and self.current_pr_refinement_node.refined_mass > Config.NACTIONS:
                                     execute = True
                                 break
                             else:
@@ -245,7 +247,8 @@ class PRRefinement:
                                 new_pr_node_candidate = PlanRefinementNode(problem_specification=new_problem_spec,
                                                                            hl_plan_tree= copy_policy_tree,
                                                                            last_refined_hl_plan_graph_node=parent_of_new_hl_plan_graph,
-                                                                           ll_state_values=ll_state_values)
+                                                                           ll_state_values=ll_state_values, restart=self.current_pr_refinement_node.restart,
+                                                                           action_execute=self.current_pr_refinement_node.action_execute)
                                 self.current_pr_refinement_node.add_child(new_pr_node_candidate)
                                 self.current_pr_refinement_node.hl_plan_tree = original_hl_plan_tree
                                 new_pr_node_candidate.set_parent(self.current_pr_refinement_node)
@@ -292,6 +295,7 @@ class PRRefinement:
                     current_root = policy_tree.get_root()
                     current_node.ll_state.sync_simulator()
                     totalSuccess = True
+                    n = 0
                     while True:
                         children = current_node.get_children()
                         if children is None or len(children) == 0:
@@ -318,14 +322,16 @@ class PRRefinement:
                                 ll_plan = action.ll_plan
                                 exec_seq = action.ll_action_spec.exec_sequence
                                 ll_state = current_node.ll_state
-                                for arg in exec_seq:
-                                    exec_obj = getattr(importlib.import_module(
-                                        'test_domains.' + Config.DOMAIN + '.Executor.' + ll_plan[arg]['type']),
-                                                       ll_plan[arg]['type'])(ll_plan[arg]['type'])
-                                    exec_obj.execute(ll_state, ll_plan[arg]['value'], action.generated_values)
+                                if exec_seq is not None:
+                                    for arg in exec_seq:
+                                        exec_obj = getattr(importlib.import_module(
+                                            Config.TEST_DIR_NAME + '.' + Config.DOMAIN + '.Executor.' + ll_plan[arg]['type']),
+                                                           ll_plan[arg]['type'])(ll_plan[arg]['type'])
+                                        exec_obj.execute(ll_state, ll_plan[arg]['value'], action.generated_values)
                                 for effect in action.ll_action_spec.effect.getPositivePredicates():
                                     ll_state.apply_effect(effect,action.generated_values)
-
+                                n+=1
+                                self.current_pr_refinement_node.action_execute += 1
                                 current_node = next_node
                             else:
                                 parent_node = current_node.get_parent()
@@ -338,11 +344,20 @@ class PRRefinement:
                                         current_node.remove_child(child)
                                         policy_tree.remove_node(child)
                                 totalSuccess = False
+                                policy_tree.readjust_probabilities()
+                                if n < Config.NACTIONS:
+                                    self.current_pr_refinement_node.restart += 1
                                 break
                         else:
                             current_node = next_node
-                    self.issue = "continue"
+                    issue = "continue"
+                    # flag_new_pr = True
                     break
+                if Config.PLOT:
+                    if self.plotter is not None:
+                        self.plotter.update()
+
+
 
 
 
@@ -353,9 +368,6 @@ class PRRefinement:
                     self.issue = issue
                     break
 
-                if Config.PLOT:
-                    if self.plotter is not None:
-                        self.plotter.update(self.current_pr_refinement_node)
 
 
             if totalSuccess:
